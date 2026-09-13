@@ -1,0 +1,9 @@
+{
+  "name": "newclearus-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Newclearus marketing site with a serverless contact form endpoint",
+  "dependencies": {
+    "resend": "^3.4.0"
+  }
+}

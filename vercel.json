@@ -1,0 +1,28 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "supadmin.co.za" }],
+      "destination": "https://newclearus.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.supadmin.co.za" }],
+      "destination": "https://newclearus.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "supadmin.online" }],
+      "destination": "https://newclearus.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.supadmin.online" }],
+      "destination": "https://newclearus.com/:path*",
+      "permanent": true
+    }
+  ]
+}
