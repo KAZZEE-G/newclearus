@@ -1,0 +1,5 @@
+name = "newclearus-staging"
+compatibility_date = "2026-10-01"
+pages_build_output_dir = "."
+# Connect this repository to Cloudflare Pages and select this branch for preview.
+# Configure RESEND_API_KEY, CONTACT_FROM_ADDRESS and TURNSTILE_SECRET_KEY in Cloudflare secrets.
