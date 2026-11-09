@@ -1,7 +1,5 @@
-# Migration status (2026-11-09)
+# Deployment status (2026-11-09)
 
-Static HTML/CSS/JS. Current public site resolves and renders. Do not change DNS before staging release comparison. Source has been committed on the migration/source branch.
+**Staging live:** https://newclearus-web.pages.dev from GitHub `migration/source`. Visitor QA confirmed home, FAQ, careers, privacy, legal pages, working client-side calculator, HTTPS. Contact enquiry currently opens an email draft and does not submit to a backend.
 
-Source of truth: original website source archive supplied by owner. **Source is available on `migration/source`. An independent production deployment has not yet been verified.**
-
-Recommended workflow: review verified source on `migration/source`, run checks, open a PR, deploy preview, smoke-test, then merge and release. Keep old commits and tags for rollback. Preserve all MX, SPF, DKIM and domain verification DNS records. Do not claim absolute DDoS or SQL injection immunity.
+**Production pending:** The Cloudflare DNS zone for `newclearus.com` has proxied apex and www CNAMEs to newclearus-web.pages.dev. MX/SPF/MS verification and autodiscover preserved. Zone is pending authoritative nameserver switch; the registrar account needs renewed authenticated access. Attach both custom domains in Pages after Cloudflare zone activation and verify HTTPS before declaring production migrated.
