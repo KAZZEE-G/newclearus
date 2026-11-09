@@ -2,7 +2,7 @@
 
 This folder is an export-based migration snapshot, not a verified production deployment.
 
-- Source status: copied from provided ChatGPT Sites export.
+- Source status: migrated from supplied source archive.
 - Class: static.
 - Version control: commit this repository; tag each verified production release.
 - Rollback: redeploy an older successful Git commit from Cloudflare Pages, or revert the commit and push.
