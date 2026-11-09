@@ -1,5 +1,7 @@
-# Deployment status (2026-11-09)
+# Deployment status
 
-**Staging live:** https://newclearus-web.pages.dev from GitHub `migration/source`. Visitor QA confirmed home, FAQ, careers, privacy, legal pages, working client-side calculator, HTTPS. Contact enquiry currently opens an email draft and does not submit to a backend.
+Production domain https://newclearus.com is active on Cloudflare Pages project `newclearus-web`, connected to GitHub `migration/source`. Public browser smoke test returned HTTPS 200 with FAQ and Careers pages accessible, after a prior Cloudflare 522 outage.
 
-**Production pending:** The Cloudflare DNS zone for `newclearus.com` has proxied apex and www CNAMEs to newclearus-web.pages.dev. MX/SPF/MS verification and autodiscover preserved. Zone is pending authoritative nameserver switch; the registrar account needs renewed authenticated access. Attach both custom domains in Pages after Cloudflare zone activation and verify HTTPS before declaring production migrated.
+**Source provenance:** The deployed source originated from the `Newclearus: Technology Simplified.` saved version 17 export and was subsequently edited on GitHub (including commit `9994bd59e8838ed429a98593ba18e3a0b7361621` to align hero/intro wording). This has **not** been verified against the latest private `Newclearus | ICT & EOR Private Review` project in ChatGPT Sites. Do not label it the final latest original design until direct comparison and source export are possible.
+
+Current enquiry form opens an email draft/copy action, not a server-side submission. Preserve Microsoft 365 MX, SPF, verification, and autodiscover DNS records. Monitor SSL and www activation. Re-test full functionality and mobile design after any future source migration.
