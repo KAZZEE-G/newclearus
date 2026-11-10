@@ -1,0 +1,90 @@
+name: Import approved Newclearus source
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: migration/source
+          fetch-depth: 1
+      - name: Download original approved source archive
+        run: |
+          python -m pip install --quiet gdown
+          gdown --id 1XP_EANW0wzF4oU9AGPTDdcw9pjgCQkTC -O /tmp/newclearus-source.zip
+          python - <<'PY'
+          from zipfile import ZipFile
+          with ZipFile('/tmp/newclearus-source.zip') as z:
+              assert 'newclearus/public/index.html' in z.namelist()
+              assert 'newclearus/public/pricing.js' in z.namelist()
+              assert 'newclearus/worker/index.mjs' in z.namelist()
+              assert len(z.namelist()) >= 48
+              z.extractall('/tmp/newclearus-release')
+          print('Original archive validated')
+          PY
+      - name: Import source and prepare static Pages build
+        run: |
+          python - <<'PY'
+          import pathlib, shutil, hashlib, json
+          source=pathlib.Path('/tmp/newclearus-release/newclearus')
+          root=pathlib.Path('.')
+          for directory in ('public','worker','scripts','tests','functions','dist'):
+              shutil.rmtree(root/directory,ignore_errors=True)
+          for directory in ('public','worker','scripts','tests'):
+              shutil.copytree(source/directory,root/directory)
+          shutil.copy2(source/'package.json',root/'package.json')
+          shutil.copy2(source/'README.md',root/'README.md')
+          shutil.copy2(source/'MIGRATION.md',root/'SOURCE-NOTES.md')
+          # Keep original source under public; dist is deployable output for Pages.
+          shutil.copytree(source/'public',root/'dist')
+          old='https://newclearus-private.kaslingovender.chatgpt.site'
+          for directory in (root/'public',root/'dist'):
+              for p in directory.rglob('*'):
+                  if p.suffix in {'.html','.xml','.css','.js','.txt'} and p.is_file():
+                      data=p.read_text(encoding='utf-8')
+                      if old in data:
+                          p.write_text(data.replace(old,'https://newclearus.com'),encoding='utf-8')
+          # Keep production searchable on the independent domain.
+          for directory in (root/'public',root/'dist'):
+              index=directory/'index.html'
+              data=index.read_text(encoding='utf-8')
+              data=data.replace('content="noindex, nofollow"','content="index, follow"')
+              data=data.replace('content="noindex,nofollow"','content="index, follow"')
+              index.write_text(data,encoding='utf-8')
+              (directory/'robots.txt').write_text('User-agent: *\\nAllow: /\\nSitemap: https://newclearus.com/sitemap.xml\\n')
+          fn = root/'functions/api/visitor-market.js'
+          fn.parent.mkdir(parents=True,exist_ok=True)
+          fn.write_text('''export async function onRequestGet({ request }) {
+            const headers = { "Cache-Control": "private, no-store", "Vary": "X-Newclearus-Location-Consent", "X-Content-Type-Options": "nosniff" };
+            if (request.headers.get("X-Newclearus-Location-Consent") !== "yes")
+              return Response.json({ error: "Location suggestion requires your choice." }, { status: 400, headers });
+            const candidate = request.cf?.country || request.headers.get("cf-ipcountry") || "";
+            const country = /^[A-Z]{2}$/.test(candidate) && !["XX", "T1"].includes(candidate) ? candidate : null;
+            return Response.json({ country }, { headers });
+          }
+          ''')
+          (root/'wrangler.toml').write_text('name = "newclearus-web"\\ncompatibility_date = "2026-11-01"\\npages_build_output_dir = "./dist"\\n')
+          print('Prepared',len(list((root/'dist').rglob('*'))),'deployed files')
+          PY
+      - name: Validate content and original tests
+        run: |
+          node tests/pricing.test.cjs
+          node tests/game.test.cjs
+          python tests/site.test.py
+          node tests/worker.test.mjs
+          test -f dist/index.html
+          grep -q 'People.' dist/index.html
+          grep -q 'Technology..' dist/index.html
+          test -f dist/resources/uk-digital-workplace-guide.html
+      - name: Commit approved source to migration branch
+        run: |
+          git config user.name "Koreplex Deployment Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish approved Newclearus private-review source and Pages build" || exit 0
+          git push origin HEAD:migration/source
