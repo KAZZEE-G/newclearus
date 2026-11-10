@@ -19,7 +19,7 @@ jobs:
       - name: Download original approved source archive
         run: |
           python -m pip install --quiet gdown
-          gdown --id 1XP_EANW0wzF4oU9AGPTDdcw9pjgCQkTC -O /tmp/newclearus-source.zip
+          gdown 1XP_EANW0wzF4oU9AGPTDdcw9pjgCQkTC -O /tmp/newclearus-source.zip
           python - <<'PY'
           from zipfile import ZipFile
           with ZipFile('/tmp/newclearus-source.zip') as z:
