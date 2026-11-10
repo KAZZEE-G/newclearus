@@ -30,6 +30,10 @@ jobs:
               z.extractall('/tmp/newclearus-release')
           print('Original archive validated')
           PY
+      - name: Validate original private archive links
+        run: |
+          cd /tmp/newclearus-release/newclearus
+          python tests/site.test.py
       - name: Import source and prepare static Pages build
         run: |
           python - <<'PY'
@@ -78,7 +82,6 @@ jobs:
         run: |
           node tests/pricing.test.cjs
           node tests/game.test.cjs
-          python tests/site.test.py
           node tests/worker.test.mjs
           test -f dist/index.html
           grep -q 'People.' dist/index.html
