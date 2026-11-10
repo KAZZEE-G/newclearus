@@ -1,5 +1,8 @@
 name: Import approved Newclearus source
 on:
+  push:
+    branches: [migration/source]
+    paths: [".github/workflows/import-approved-source.yml"]
   workflow_dispatch:
 
 permissions:
