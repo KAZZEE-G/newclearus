@@ -1,3 +1,1 @@
-User-agent: *
-Allow: /
-Sitemap: https://newclearus.com/sitemap.xml
+User-agent: *\nAllow: /\nSitemap: https://newclearus.com/sitemap.xml\n

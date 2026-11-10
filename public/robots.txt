@@ -1,0 +1,1 @@
+User-agent: *\nAllow: /\nSitemap: https://newclearus.com/sitemap.xml\n

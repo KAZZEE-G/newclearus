@@ -1,3 +1,1 @@
-name = "newclearus"
-compatibility_date = "2026-11-01"
-pages_build_output_dir = "./dist"
+name = "newclearus-web"\ncompatibility_date = "2026-11-01"\npages_build_output_dir = "./dist"\n
